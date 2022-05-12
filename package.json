@@ -1,0 +1,17 @@
+{
+  "name": "openlayers",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.6.7"
+  },
+  "dependencies": {
+    "dom-to-image": "^2.6.0",
+    "ol": "latest",
+    "ol-map-screenshot": "^1.0.2"
+  }
+}

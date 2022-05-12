@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="https://openlayers.org/favicon.ico" />
+  <!-- ZUI 标准版压缩后的 CSS 文件 -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/css/zui.min.css">
+  <!-- ZUI Javascript 依赖 jQuery -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/lib/jquery/jquery.js"></script>
+  <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/js/zui.min.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <title>Using OpenLayers with Vite</title>
+</head>
+
+<body>
+  <div class="openlayers">
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <!-- 导航头部 -->
+        <div class="navbar-header">
+          <!-- 品牌名称或logo -->
+          <a class="navbar-brand" href="/" style="font-weight: bold;">滑坡识别平台</a>
+        </div>
+        <!-- 导航项目 -->
+        <div class="collapse navbar-collapse navbar-collapse-example">
+          <!-- 一般导航项目 -->
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">要素管理 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#feature-page">要素面板</a></li>
+                <li class="divider"></li>
+                <li><a>点</a></li>
+                <li><a>圆</a></li>
+                <li><a>矩形</a></li>
+                <li><a>多边形</a></li>
+                <li class="divider"></li>
+                <li><a>导出</a></li>
+                <li><a>导入</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">图层管理 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#layer-page">图层面板</a></li>
+                <li class="divider"></li>
+                <li><a>导入</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">滑坡识别 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a id="landslide-quick-recog">快速识别</a></li>
+                <li><a id="landslide-area-recog">范围识别</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">帮助</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">未登录 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a>登录</a></li>
+                <li><a>注册</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- END .navbar-collapse -->
+      </div>
+    </nav>
+
+    <div class="content">
+      <div id="map">
+      </div>
+    </div>
+  </div>
+
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
