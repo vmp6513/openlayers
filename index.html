@@ -4,50 +4,49 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="https://openlayers.org/favicon.ico" />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   <!-- ZUI 标准版压缩后的 CSS 文件 -->
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/css/zui.min.css">
+  <link href="lib/uploader/zui.uploader.min.css" rel="stylesheet">
+  <script src="lib/uploader/zui.uploader.min.js"></script>
   <!-- ZUI Javascript 依赖 jQuery -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/lib/jquery/jquery.js"></script>
   <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.10.0/js/zui.min.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <title>Using OpenLayers with Vite</title>
+  <title>滑坡识别平台</title>
 </head>
 
 <body>
   <div class="openlayers">
+    <!-- 导航栏 -->
     <nav class="navbar navbar-inverse" role="navigation">
       <div class="container-fluid">
         <!-- 导航头部 -->
         <div class="navbar-header">
           <!-- 品牌名称或logo -->
-          <a class="navbar-brand" href="/" style="font-weight: bold;">滑坡识别平台</a>
+          <a class="navbar-brand" href="/" style="font-weight: bold; font-size: 20px;">滑坡识别平台</a>
         </div>
         <!-- 导航项目 -->
-        <div class="collapse navbar-collapse navbar-collapse-example">
+        <div class="collapse navbar-collapse navbar-collapse-example" style="font-size: 16px;">
           <!-- 一般导航项目 -->
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">要素管理 <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#feature-page">要素面板</a></li>
-                <li class="divider"></li>
-                <li><a>点</a></li>
-                <li><a>圆</a></li>
-                <li><a>矩形</a></li>
-                <li><a>多边形</a></li>
+                <li><a id="nav-feature-page" href="#feature-page" sidebar="feature-page">要素面板</a></li>
                 <li class="divider"></li>
                 <li><a>导出</a></li>
-                <li><a>导入</a></li>
+                <li><a data-toggle="modal" data-target="#feature-input-modal">导入</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">图层管理 <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#layer-page">图层面板</a></li>
+                <li><a id="nav-layer-page" href="#layer-page" sidebar="layer-page">图层面板</a></li>
                 <li class="divider"></li>
-                <li><a>导入</a></li>
+                <li><a data-toggle="modal" data-target="#layer-input-modal">导入</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -57,29 +56,272 @@
                 <li><a id="landslide-area-recog">范围识别</a></li>
               </ul>
             </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">选项 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+              </ul>
+            </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/">帮助</a></li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">未登录 <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a>登录</a></li>
-                <li><a>注册</a></li>
+                <li><a data-toggle="modal" data-target="#login-modal">登录</a></li>
               </ul>
             </li>
           </ul>
-        </div><!-- END .navbar-collapse -->
+        </div>
       </div>
     </nav>
-
+    <!-- 工具栏 -->
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse navbar-collapse-example" style="font-size: 16px;">
+          <!-- 要素绘制 -->
+          <form class="navbar-form navbar-left" role="feature-edit">
+            <div class="form-group">
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn  active">
+                  <input type="radio" name="options" id="option1" checked><i data-toggle="tooltip" data-placement="bottom"
+                    title="移动" class="icon icon-arrows"></i>
+                </label>
+                <label class="btn ">
+                  <input type="radio" name="options" id="option2"><i data-toggle="tooltip" data-placement="bottom"
+                    title="添加点" class="icon icon-map-marker"></i>
+                </label>
+                <label class="btn ">
+                  <input type="radio" name="options" id="option3"><i data-toggle="tooltip" data-placement="bottom"
+                    title="添加线" class="icon icon-minus"></i>
+                </label>
+                <label class="btn ">
+                  <input type="radio" name="options" id="option4"><i data-toggle="tooltip" data-placement="bottom"
+                    title="添加多边形" class="icon icon-lemon"></i>
+                </label>
+              </div>
+            </div>
+          </form>
+          <!-- 小工具 -->
+          <form class="navbar-form navbar-left" role="tools">
+            <div class="form-group">
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn active">
+                  <input type="checkbox"><i class="icon icon-th"></i> 网格
+                </label>
+                <label class="btn">
+                  <input type="checkbox"><i class="icon icon-align-justify"></i> 标尺
+                </label>
+                <label class="btn">
+                  <input type="checkbox"><i class="icon icon-rss"></i> 经纬度显示
+                </label>
+              </div>
+            </div>
+          </form>
+          <!-- 视图控制 -->
+          <div class="navbar-form navbar-left" role="view-control">
+            <div class="form-group">
+              <div class="btn-group">
+                <button class="btn"><i class="icon icon-zoom-in" data-toggle="tooltip" data-placement="bottom"
+                    title="放大"></i></button>
+                <button class="btn"><i class="icon icon-zoom-out" data-toggle="tooltip" data-placement="bottom"
+                    title="缩小"></i></button>
+                <button class="btn"><i class="icon icon-resize-full" data-toggle="tooltip" data-placement="bottom"
+                    title="全屏"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- 主体内容 -->
     <div class="content">
+      <!-- 要素导入对话框 -->
+      <div class="modal fade" id="feature-input-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                  class="sr-only">关闭</span></button>
+              <h4 class="modal-title">要素导入</h4>
+            </div>
+            <div class="modal-body">
+              <div class="uploader-files file-list file-list-lg" data-drag-placeholder="XXX县KML文件"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i>
+                选择文件</button>
+              <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i>
+                开始上传</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 图层导入对话框 -->
+      <div class="modal fade" id="layer-input-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                  class="sr-only">关闭</span></button>
+              <h4 class="modal-title">图层导入</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label>图层类型</label>
+                  <select class="form-control">
+                    <option value="">请选择导入的图层类型</option>
+                    <option value="online-tile">在线瓦片数据（需要提供URL以及对应的密钥）</option>
+                    <option value="offline-tile">离线瓦片数据</option>
+                    <option value="offline-vector">离线矢量图层</option>
+                    <option value="other">其他</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>URL</label>
+                  <input type="text" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label>密钥</label>
+                  <input type="password" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label>标题</label>
+                  <input type="text" class="form-control" placeholder="默认为未知图层">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn b">开始上传</button>
+              <button type="button" class="btn btn-primary">测试</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 登录对话框 -->
+      <div class="modal fade" id="login-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                  class="sr-only">关闭</span></button>
+              <h4 class="modal-title">滑坡识别平台-登录</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="exampleInputAccount1">用户名</label>
+                  <input type="text" class="form-control" id="exampleInputAccount1" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">密码</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-toggle="modal"
+                data-target="#register-modal">注册</button>
+              <button type="button" class="btn btn-primary">登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 注册对话框 -->
+      <div class="modal fade" id="register-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                  class="sr-only">关闭</span></button>
+              <h4 class="modal-title">滑坡识别平台-注册</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="exampleInputAccount1">用户名</label>
+                  <input type="text" class="form-control" id="exampleInputAccount" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">密码</label>
+                  <input type="password" class="form-control" id="exampleInputPassword" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">再次输入密码</label>
+                  <input type="password" class="form-control" id="exampleInputRePassword" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">邮箱</label>
+                  <input type="email" class="form-control" id="exampleInputEmail" placeholder="">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success">提交</button>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login-modal">返回登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 侧边栏 -->
+      <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+          <ul role="tablist">
+            <li><a href="#feature-page" role="tab"><i class="icon icon-node"></i></a></li>
+            <li><a href="#layer-page" role="tab"><i class="icon icon-stack"></i></a></li>
+          </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+          <div class="sidebar-pane" id="feature-page">
+            <h1 class="sidebar-header">
+              地理要素
+              <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+            </h1>
+            <div id="feature-content">
+
+            </div>
+          </div>
+          <div class="sidebar-pane" id="layer-page">
+            <h1 class="sidebar-header">图层<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+            </h1>
+            <div id="layer-content">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="map">
       </div>
     </div>
   </div>
 
-
   <script type="module" src="./main.js"></script>
+  <script>
+    function hide() {
+      document.getElementById('shade').classList.add('hide');
+      document.getElementById('login-page').classList.add('hide');
+    }
+    function show() {
+      document.getElementById('shade').classList.remove('hide');
+      document.getElementById('login-page').classList.remove('hide');
+    }
+    function register() {
+      // TODO
+    }
+    function to_login() {
+      document.getElementById('register').classList.add('hide');
+      document.getElementById('login').classList.remove('hide');
+    }
+    function to_register() {
+      document.getElementById('login').classList.add('hide');
+      document.getElementById('register').classList.remove('hide');
+    }
+  </script>
 </body>
 
 </html>
